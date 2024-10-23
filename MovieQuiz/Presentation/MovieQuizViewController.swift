@@ -5,8 +5,6 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
-    
-    
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
     @IBOutlet private weak var questionLabel: UILabel!
@@ -67,6 +65,8 @@ final class MovieQuizViewController: UIViewController {
     }
     
     @IBAction private func yesButtonClicked(_ sender: Any) {
+        blockButtons()
+        
         let givenAnswer = true
         let correctAnswer = questions[currentQuestionIndex].correctAnswer
         
@@ -74,10 +74,22 @@ final class MovieQuizViewController: UIViewController {
     }
     
     @IBAction private func noButtonClicked(_ sender: Any) {
+        blockButtons()
+        
         let givenAnswer = false
         let correctAnswer = questions[currentQuestionIndex].correctAnswer
         
         showAnswerResult(isCorrect: givenAnswer == correctAnswer)
+    }
+    
+    private func blockButtons() {
+        yesButton.isEnabled = false
+        noButton.isEnabled = false
+    }
+
+    private func unblockButtons() {
+        yesButton.isEnabled = true
+        noButton.isEnabled = true
     }
     
     // Настройку шрифтов сделал через код, так как в Storyboard в настройках лейблов шрифт не отображается. Пробовал на 16 и 15.4 версиях Xcode.
@@ -117,6 +129,8 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func showNextQuestionOrResults() {
+        unblockButtons()
+        
         imageView.layer.borderColor = nil
         imageView.layer.borderWidth = 0.0
         
