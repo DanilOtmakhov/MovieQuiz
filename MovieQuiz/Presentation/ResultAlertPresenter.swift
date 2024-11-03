@@ -11,7 +11,6 @@ protocol AlertPresenterProtocol: AnyObject {
     func show(alertModel: AlertModel)
 }
 
-
 final class ResultAlertPresenter {
     weak var viewController: UIViewController?
     
@@ -19,7 +18,6 @@ final class ResultAlertPresenter {
         self.viewController = viewController
     }
 }
-
 
 extension ResultAlertPresenter: AlertPresenterProtocol {
     func show(alertModel: AlertModel) {

@@ -9,13 +9,14 @@ import Foundation
 
 final class StatisticServiceImplementation {
     
-    private let storage: UserDefaults = .standard
-    
     private enum Keys: String {
         case correct
         case bestGame
         case gamesCount
     }
+    
+    private let storage: UserDefaults = .standard
+    
     private var correctAnswers: Int {
         get {
             return storage.integer(forKey: Keys.correct.rawValue)
