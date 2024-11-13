@@ -1,5 +1,5 @@
 //
-//  StatisticServiceImplementation.swift
+//  StatisticService.swift
 //  MovieQuiz
 //
 //  Created by Danil Otmakhov on 02.11.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class StatisticServiceImplementation {
+final class StatisticService {
     
     private enum Keys: String {
         case correct
@@ -27,7 +27,7 @@ final class StatisticServiceImplementation {
     }
 }
 
-extension StatisticServiceImplementation: StatisticService {
+extension StatisticService: StatisticServiceProtocol {
     var gamesCount: Int {
         get {
             return storage.integer(forKey: Keys.gamesCount.rawValue)

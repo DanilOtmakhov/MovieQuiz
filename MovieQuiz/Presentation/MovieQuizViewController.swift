@@ -18,8 +18,8 @@ final class MovieQuizViewController: UIViewController {
     private var questionFactory: QuestionFactoryProtocol?
     private var alertPresenter: AlertPresenterProtocol?
 
-    private lazy var statisticService: StatisticService = {
-        let statisticService = StatisticServiceImplementation()
+    private lazy var statisticService: StatisticServiceProtocol = {
+        let statisticService = StatisticService()
         return statisticService
     }()
     
@@ -120,7 +120,7 @@ final class MovieQuizViewController: UIViewController {
             statisticService.store(gameResult: GameResult(correct: correctAnswers, total: questionsAmount, date: Date()))
             
             let finalAlertModel = createFinalAlertModel()
-            alertPresenter = ResultAlertPresenter(viewController: self)
+            alertPresenter = AlertPresenter(viewController: self)
             DispatchQueue.main.async { [weak self] in
                 self?.alertPresenter?.show(alertModel: finalAlertModel)
             }

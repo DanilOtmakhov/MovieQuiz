@@ -1,5 +1,5 @@
 //
-//  ResultAlertPresenter.swift
+//  AlertPresenter.swift
 //  MovieQuiz
 //
 //  Created by Danil Otmakhov on 25.10.2024.
@@ -7,11 +7,7 @@
 
 import UIKit
 
-protocol AlertPresenterProtocol: AnyObject {
-    func show(alertModel: AlertModel)
-}
-
-final class ResultAlertPresenter {
+final class AlertPresenter {
     weak var viewController: UIViewController?
     
     init(viewController: UIViewController? = nil) {
@@ -19,7 +15,7 @@ final class ResultAlertPresenter {
     }
 }
 
-extension ResultAlertPresenter: AlertPresenterProtocol {
+extension AlertPresenter: AlertPresenterProtocol {
     func show(alertModel: AlertModel) {
         let alert = UIAlertController(
             title: alertModel.title,
