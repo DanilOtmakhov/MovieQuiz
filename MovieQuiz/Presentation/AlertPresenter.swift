@@ -8,6 +8,7 @@
 import UIKit
 
 final class AlertPresenter {
+    
     weak var viewController: UIViewController?
     
     init(viewController: UIViewController? = nil) {
@@ -20,7 +21,8 @@ extension AlertPresenter: AlertPresenterProtocol {
         let alert = UIAlertController(
             title: alertModel.title,
             message: alertModel.message,
-            preferredStyle: .alert)
+            preferredStyle: .alert
+        )
         
         let action = UIAlertAction(
             title: alertModel.buttonText,

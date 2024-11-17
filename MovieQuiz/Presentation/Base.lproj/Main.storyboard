@@ -99,17 +99,23 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="xiu-A0-UCH">
+                                <rect key="frame" x="186.66666666666666" y="416" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1vd-gk-CcK" secondAttribute="trailing" constant="20" id="9Vj-qn-GNH"/>
+                            <constraint firstItem="xiu-A0-UCH" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="af1-gu-c5D"/>
                             <constraint firstItem="1vd-gk-CcK" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="bf8-V0-vSv"/>
                             <constraint firstItem="1vd-gk-CcK" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="en2-f9-5lG"/>
+                            <constraint firstItem="xiu-A0-UCH" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="jDr-Xw-tfl"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="1vd-gk-CcK" secondAttribute="bottom" id="uCg-pz-zpQ"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="xiu-A0-UCH" id="CJh-Qo-3jR"/>
                         <outlet property="counterLabel" destination="a5a-RF-mup" id="glO-15-78s"/>
                         <outlet property="imageView" destination="qvY-pC-afM" id="02N-XZ-ssk"/>
                         <outlet property="noButton" destination="Bnh-pc-njn" id="IhU-K7-Pic"/>
