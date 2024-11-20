@@ -9,6 +9,7 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
     @IBOutlet private weak var questionLabel: UILabel!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     private let questionsAmount: Int = 10
     private var currentQuestion: QuizQuestion?
@@ -29,10 +30,11 @@ final class MovieQuizViewController: UIViewController {
         
         setFonts()
         
-        let questionFactory = QuestionFactory(delegate: self)
+        let questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         self.questionFactory = questionFactory
         
-        questionFactory.requestNextQuestion()
+        activityIndicator.startAnimating()
+        questionFactory.loadData()
     }
     
     //MARK: - Methods
@@ -46,7 +48,6 @@ final class MovieQuizViewController: UIViewController {
         noButton.isEnabled = true
     }
     
-    // Настройка шрифтов сделана через код, так как в Storyboard в настройках лейблов шрифт не отображается. Пробовал на 16 и 15.4 версиях Xcode.
     private func setFonts() {
         textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
@@ -57,7 +58,7 @@ final class MovieQuizViewController: UIViewController {
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
     }
@@ -119,16 +120,36 @@ final class MovieQuizViewController: UIViewController {
         if isLastQuestion() {
             statisticService.store(gameResult: GameResult(correct: correctAnswers, total: questionsAmount, date: Date()))
             
-            let finalAlertModel = createFinalAlertModel()
             alertPresenter = AlertPresenter(viewController: self)
+            let finalAlertModel = createFinalAlertModel()
+            
             DispatchQueue.main.async { [weak self] in
                 self?.alertPresenter?.show(alertModel: finalAlertModel)
             }
         } else {
             currentQuestionIndex += 1
-            
+            activityIndicator.startAnimating()
             questionFactory?.requestNextQuestion()
         }
+    }
+    
+    private func showNetworkError(message: String) {
+        activityIndicator.stopAnimating()
+        
+        alertPresenter = AlertPresenter(viewController: self)
+        let networkErrorAlertModel = AlertModel(
+            title: "Ошибка",
+            message: message,
+            buttonText: "Попробовать снова") { [weak self] in
+                guard let self = self else { return }
+                    
+                self.currentQuestionIndex = 0
+                self.correctAnswers = 0
+                
+                self.questionFactory?.requestNextQuestion()
+            }
+        
+        alertPresenter?.show(alertModel: networkErrorAlertModel)
     }
     
     //MARK: - Actions
@@ -165,7 +186,21 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
         let viewModel = convert(model: question)
             
         DispatchQueue.main.async { [weak self] in
+            self?.activityIndicator.stopAnimating()
             self?.show(quiz: viewModel)
         }
+    }
+    
+    func didLoadDataFromServer() {
+        activityIndicator.stopAnimating()
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: any Error) {
+        showNetworkError(message: error.localizedDescription)
+    }
+    
+    func didFailRequestNextQuestion(with error: any Error) {
+        showNetworkError(message: error.localizedDescription)
     }
 }
