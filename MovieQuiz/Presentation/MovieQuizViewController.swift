@@ -48,7 +48,6 @@ final class MovieQuizViewController: UIViewController {
         noButton.isEnabled = true
     }
     
-    // Настройка шрифтов сделана через код, так как в Storyboard в настройках лейблов шрифт не отображается. Пробовал на 16 и 15.4 версиях Xcode.
     private func setFonts() {
         textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
@@ -129,7 +128,7 @@ final class MovieQuizViewController: UIViewController {
             }
         } else {
             currentQuestionIndex += 1
-            
+            activityIndicator.startAnimating()
             questionFactory?.requestNextQuestion()
         }
     }
@@ -187,6 +186,7 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
         let viewModel = convert(model: question)
             
         DispatchQueue.main.async { [weak self] in
+            self?.activityIndicator.stopAnimating()
             self?.show(quiz: viewModel)
         }
     }
