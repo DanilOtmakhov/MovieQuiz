@@ -2,7 +2,7 @@ import UIKit
 
 final class MovieQuizViewController: UIViewController {
     
-    //MARK: - Properties
+    //MARK: - IB Outlets
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
@@ -11,6 +11,7 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var questionLabel: UILabel!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
+    //MARK: - Private Properties
     private let questionsAmount: Int = 10
     private var currentQuestion: QuizQuestion?
     private var currentQuestionIndex = 0
@@ -18,7 +19,6 @@ final class MovieQuizViewController: UIViewController {
     
     private var questionFactory: QuestionFactoryProtocol?
     private var alertPresenter: AlertPresenterProtocol?
-
     private lazy var statisticService: StatisticServiceProtocol = {
         let statisticService = StatisticService()
         return statisticService
@@ -37,7 +37,30 @@ final class MovieQuizViewController: UIViewController {
         questionFactory.loadData()
     }
     
-    //MARK: - Methods
+    //MARK: - IB Actions
+    @IBAction private func yesButtonClicked(_ sender: Any) {
+        blockButtons()
+        
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        let givenAnswer = true
+        
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+    }
+    
+    @IBAction private func noButtonClicked(_ sender: Any) {
+        blockButtons()
+        
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        let givenAnswer = false
+        
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+    }
+    
+    //MARK: - Private Methods
     private func blockButtons() {
         yesButton.isEnabled = false
         noButton.isEnabled = false
@@ -151,31 +174,7 @@ final class MovieQuizViewController: UIViewController {
         
         alertPresenter?.show(alertModel: networkErrorAlertModel)
     }
-    
-    //MARK: - Actions
-    @IBAction private func yesButtonClicked(_ sender: Any) {
-        blockButtons()
-        
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
-        let givenAnswer = true
-        
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-    }
-    
-    @IBAction private func noButtonClicked(_ sender: Any) {
-        blockButtons()
-        
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
-        let givenAnswer = false
-        
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-    }    
 }
-
 
 //MARK: - QuestionFactoryDelegate
 extension MovieQuizViewController: QuestionFactoryDelegate {
