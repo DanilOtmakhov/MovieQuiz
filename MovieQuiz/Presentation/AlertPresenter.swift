@@ -24,6 +24,8 @@ extension AlertPresenter: AlertPresenterProtocol {
             preferredStyle: .alert
         )
         
+        alert.view.accessibilityIdentifier = "Alert: " + alertModel.title
+        
         let action = UIAlertAction(
             title: alertModel.buttonText,
             style: .default) { _ in
