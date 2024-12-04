@@ -12,11 +12,9 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     //MARK: - Private Properties
-    private let questionsAmount: Int = 10
-    private var currentQuestion: QuizQuestion?
-    private var currentQuestionIndex = 0
     private var correctAnswers = 0
-    
+    private var currentQuestion: QuizQuestion?
+    private let presenter = MovieQuizPresenter()
     private var questionFactory: QuestionFactoryProtocol?
     private var alertPresenter: AlertPresenterProtocol?
     private lazy var statisticService: StatisticServiceProtocol = {
@@ -79,13 +77,6 @@ final class MovieQuizViewController: UIViewController {
         questionLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
     }
     
-    private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        QuizStepViewModel(
-            image: UIImage(data: model.image) ?? UIImage(),
-            question: model.text,
-            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
-    }
-    
     private func show(quiz step: QuizStepViewModel) {
         imageView.image = step.image
         textLabel.text = step.question
@@ -108,13 +99,9 @@ final class MovieQuizViewController: UIViewController {
         }
     }
     
-    private func isLastQuestion() -> Bool {
-        return currentQuestionIndex == questionsAmount - 1
-    }
-    
     private func createFinalAlertModel() -> AlertModel {
         let message = """
-            Ваш результат: \(correctAnswers)/\(questionsAmount)
+            Ваш результат: \(correctAnswers)/\(presenter.questionsAmount)
             Количество сыгранных квизов: \(statisticService.gamesCount)
             Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))
             Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
@@ -126,7 +113,7 @@ final class MovieQuizViewController: UIViewController {
             buttonText: "Сыграть еще раз") { [weak self] in
                 guard let self = self else { return }
                     
-                self.currentQuestionIndex = 0
+                presenter.resetQuestionIndex()
                 self.correctAnswers = 0
                     
                 questionFactory?.requestNextQuestion()
@@ -140,8 +127,8 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.borderColor = nil
         imageView.layer.borderWidth = 0.0
         
-        if isLastQuestion() {
-            statisticService.store(gameResult: GameResult(correct: correctAnswers, total: questionsAmount, date: Date()))
+        if presenter.isLastQuestion() {
+            statisticService.store(gameResult: GameResult(correct: correctAnswers, total: presenter.questionsAmount, date: Date()))
             
             alertPresenter = AlertPresenter(viewController: self)
             let finalAlertModel = createFinalAlertModel()
@@ -150,7 +137,7 @@ final class MovieQuizViewController: UIViewController {
                 self?.alertPresenter?.show(alertModel: finalAlertModel)
             }
         } else {
-            currentQuestionIndex += 1
+            presenter.switchToNextQuestion()
             activityIndicator.startAnimating()
             questionFactory?.requestNextQuestion()
         }
@@ -166,7 +153,7 @@ final class MovieQuizViewController: UIViewController {
             buttonText: "Попробовать снова") { [weak self] in
                 guard let self = self else { return }
                     
-                self.currentQuestionIndex = 0
+                presenter.resetQuestionIndex()
                 self.correctAnswers = 0
                 
                 self.questionFactory?.requestNextQuestion()
@@ -182,7 +169,7 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
         guard let question = question else { return }
         
         currentQuestion = question
-        let viewModel = convert(model: question)
+        let viewModel = presenter.convert(model: question)
             
         DispatchQueue.main.async { [weak self] in
             self?.activityIndicator.stopAnimating()
