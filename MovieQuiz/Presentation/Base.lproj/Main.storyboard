@@ -103,8 +103,8 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="xiu-A0-UCH">
-                                <rect key="frame" x="186.66666666666666" y="416" width="20" height="20"/>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="xiu-A0-UCH">
+                                <rect key="frame" x="187" y="405" width="20" height="31"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -119,9 +119,9 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="activityIndicator" destination="xiu-A0-UCH" id="CJh-Qo-3jR"/>
                         <outlet property="counterLabel" destination="a5a-RF-mup" id="glO-15-78s"/>
                         <outlet property="imageView" destination="qvY-pC-afM" id="02N-XZ-ssk"/>
+                        <outlet property="loadingIndicator" destination="xiu-A0-UCH" id="H9M-ry-B8Q"/>
                         <outlet property="noButton" destination="Bnh-pc-njn" id="IhU-K7-Pic"/>
                         <outlet property="questionLabel" destination="oLN-Li-OZt" id="MLZ-1D-7vW"/>
                         <outlet property="textLabel" destination="JEz-gZ-ssQ" id="qzV-Mg-8xZ"/>
@@ -130,7 +130,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1229" y="-507"/>
+            <point key="canvasLocation" x="-1229.7709923664122" y="-507.04225352112678"/>
         </scene>
     </scenes>
     <resources>
