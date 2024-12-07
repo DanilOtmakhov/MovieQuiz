@@ -46,7 +46,10 @@ extension QuestionFactory: QuestionFactoryProtocol {
                 imageData = try Data(contentsOf: movie.resizedImageURL)
             }
             catch let error {
-                self.delegate?.didFailRequestNextQuestion(with: error)
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.didFailRequestNextQuestion(with: error)
+                }
             }
             
             let rating = Float(movie.rating) ?? 0

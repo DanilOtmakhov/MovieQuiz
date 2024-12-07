@@ -30,12 +30,6 @@ final class MovieQuizPresenter {
     }
     
     //MARK: - Public Methods
-    func restartGame() {
-        currentQuestionIndex = 0
-        correctAnswers = 0
-        questionFactory?.requestNextQuestion()
-    }
-    
     func yesButtonClicked() {
         didAnswer(isYes: true)
     }
@@ -48,10 +42,17 @@ final class MovieQuizPresenter {
         QuizStepViewModel(
             image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
-            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
+            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)"
+        )
     }
     
     //MARK: - Private Methods
+    private func restartGame() {
+        currentQuestionIndex = 0
+        correctAnswers = 0
+        questionFactory?.requestNextQuestion()
+    }
+    
     private func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount - 1
     }
@@ -80,7 +81,6 @@ final class MovieQuizPresenter {
         if isCorrect {
             correctAnswers += 1
         }
-        
         viewController?.highlightImageBorder(isCorrect: isCorrect)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
@@ -111,6 +111,16 @@ final class MovieQuizPresenter {
             }
         return alertModel
     }
+    
+    private func createNetworkErrorAlertModel(message: String, completion: @escaping () -> Void) -> AlertModel {
+        let alertModel = AlertModel(
+            title: "Ошибка",
+            message: message,
+            buttonText: "Попробовать снова",
+            completion: completion
+        )
+        return alertModel
+    }
 }
 
 //MARK: - QuestionFactoryDelegate
@@ -133,10 +143,17 @@ extension MovieQuizPresenter: QuestionFactoryDelegate {
     }
     
     func didFailToLoadData(with error: any Error) {
-        viewController?.showNetworkError(message: error.localizedDescription)
+        let alertModel = createNetworkErrorAlertModel(message: error.localizedDescription) { [weak self] in
+            self?.questionFactory?.loadData()
+            self?.restartGame()
+        }
+        viewController?.show(alertModel: alertModel)
     }
     
     func didFailRequestNextQuestion(with error: any Error) {
-        viewController?.showNetworkError(message: error.localizedDescription)
+        let alertModel = createNetworkErrorAlertModel(message: error.localizedDescription) { [weak self] in
+            self?.questionFactory?.requestNextQuestion()
+        }
+        viewController?.show(alertModel: alertModel)
     }
 }

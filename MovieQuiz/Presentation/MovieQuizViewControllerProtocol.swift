@@ -19,5 +19,4 @@ protocol MovieQuizViewControllerProtocol: AnyObject {
     
     func show(quiz step: QuizStepViewModel)
     func show(alertModel: AlertModel)
-    func showNetworkError(message: String)
 }

@@ -2,6 +2,8 @@
 //  MovieQuizViewController.swift
 //  MovieQuiz
 //
+//  Created by Danil Otmakhov.
+//
 
 import UIKit
 
@@ -78,21 +80,6 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     func show(alertModel: AlertModel) {
         alertPresenter = AlertPresenter(viewController: self)
         alertPresenter?.show(alertModel: alertModel)
-    }
-    
-    func showNetworkError(message: String) {
-        hideLoadingIndicator()
-        
-        alertPresenter = AlertPresenter(viewController: self)
-        let networkErrorAlertModel = AlertModel(
-            title: "Ошибка",
-            message: message,
-            buttonText: "Попробовать снова") { [weak self] in
-                guard let self = self else { return }
-                presenter.restartGame()
-            }
-        
-        alertPresenter?.show(alertModel: networkErrorAlertModel)
     }
     
     //MARK: - Private Methods
