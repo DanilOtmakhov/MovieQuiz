@@ -12,7 +12,9 @@ struct NetworkClient {
     private enum NetworkError: Error {
         case codeError
     }
-    
+}
+
+extension NetworkClient: NetworkRouting {
     func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
         let request = URLRequest(url: url)
         
