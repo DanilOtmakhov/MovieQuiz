@@ -33,11 +33,11 @@ final class MovieQuizPresenter {
     
     // MARK: - Public Methods
     
-    func yesButtonClicked() {
+    func didTapYesButton() {
         didAnswer(isYes: true)
     }
     
-    func noButtonClicked() {
+    func didTapNoButton() {
         didAnswer(isYes: false)
     }
     

@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol MoviesLoaderProtocol {
+    func loadMovies(handler: @escaping (Result<MostPopularMovies, Error>) -> Void)
+}
+
 struct MoviesLoader {
     
     private let networkClient: NetworkRouting

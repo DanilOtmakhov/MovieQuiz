@@ -7,17 +7,87 @@
 
 import UIKit
 
+protocol MovieQuizViewControllerProtocol: AnyObject {
+    func showLoadingIndicator()
+    func hideLoadingIndicator()
+    
+    func blockButtons()
+    func unblockButtons()
+    
+    func highlightImageBorder(isCorrect: Bool)
+    func hideImageBorder()
+    
+    func show(quiz step: QuizStepViewModel)
+    func show(alertModel: AlertModel)
+}
+
 final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
     
-    // MARK: - IB Outlets
+    // MARK: - Views
     
-    @IBOutlet private weak var imageView: UIImageView!
-    @IBOutlet private weak var textLabel: UILabel!
-    @IBOutlet private weak var counterLabel: UILabel!
-    @IBOutlet private weak var yesButton: UIButton!
-    @IBOutlet private weak var noButton: UIButton!
-    @IBOutlet private weak var questionLabel: UILabel!
-    @IBOutlet private weak var loadingIndicator: UIActivityIndicatorView!
+    private lazy var questionLabel: UILabel = {
+        $0.text = "Вопрос:"
+        $0.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        $0.textColor = .ypWhite
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        return $0
+    }(UILabel())
+    
+    private lazy var counterLabel: UILabel = {
+        $0.text = "1/10"
+        $0.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        $0.textColor = .ypWhite
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        return $0
+    }(UILabel())
+    
+    private lazy var imageView: UIImageView = {
+        $0.backgroundColor = .ypWhite
+        $0.contentMode = .scaleAspectFill
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 20
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        return $0
+    }(UIImageView())
+    
+    private lazy var textLabel: UILabel = {
+        $0.text = "Рейтинг этого фильма меньше чем 5?"
+        $0.font = UIFont(name: "YSDisplay-Bold", size: 23)
+        $0.textColor = .ypWhite
+        $0.numberOfLines = 2
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.textAlignment = .center
+        return $0
+    }(UILabel())
+    
+    private lazy var yesButton: UIButton = {
+        $0.setTitle("Да", for: .normal)
+        $0.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        $0.setTitleColor(.ypBlack, for: .normal)
+        $0.backgroundColor = .ypWhite
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 15
+        $0.addTarget(self, action: #selector(didTapYesButton), for: .touchUpInside)
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        return $0
+    }(UIButton())
+    
+    private lazy var noButton: UIButton = {
+        $0.setTitle("Нет", for: .normal)
+        $0.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        $0.setTitleColor(.ypBlack, for: .normal)
+        $0.backgroundColor = .ypWhite
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 15
+        $0.addTarget(self, action: #selector(didTapNoButton), for: .touchUpInside)
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        return $0
+    }(UIButton())
+    
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        return $0
+    }(UIActivityIndicatorView())
     
     // MARK: - Private Properties
     
@@ -28,21 +98,8 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setFonts()
+        setupViewController()
         presenter = MovieQuizPresenter(viewController: self)
-    }
-    
-    // MARK: - IB Actions
-    
-    @IBAction private func yesButtonClicked(_ sender: Any) {
-        blockButtons()
-        presenter.yesButtonClicked()
-    }
-    
-    @IBAction private func noButtonClicked(_ sender: Any) {
-        blockButtons()
-        presenter.noButtonClicked()
     }
     
     // MARK: - Public Methods
@@ -86,16 +143,56 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         alertPresenter = AlertPresenter(viewController: self)
         alertPresenter?.show(alertModel: alertModel)
     }
+    
+    // MARK: - Actions
+    
+    @objc private func didTapYesButton() {
+        blockButtons()
+        presenter.didTapYesButton()
+    }
+    
+    @objc private func didTapNoButton() {
+        blockButtons()
+        presenter.didTapNoButton()
+    }
 }
 
 // MARK: - Setup
 
 extension MovieQuizViewController {
-    private func setFonts() {
-        textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
-        counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        yesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        noButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        questionLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+    private func setupViewController() {
+        view.backgroundColor = .ypBlack
+        
+        let titleStack = UIStackView(arrangedSubviews: [questionLabel, counterLabel])
+        titleStack.axis = .horizontal
+        titleStack.spacing = 20
+
+        let buttonStack = UIStackView(arrangedSubviews: [noButton, yesButton])
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 20
+        buttonStack.distribution = .fillEqually
+        
+        let mainStack = UIStackView(arrangedSubviews: [titleStack, imageView, textLabel, buttonStack])
+        mainStack.axis = .vertical
+        mainStack.spacing = 20
+        mainStack.translatesAutoresizingMaskIntoConstraints = false
+
+        [mainStack, loadingIndicator].forEach {
+            view.addSubview($0)
+        }
+        
+        NSLayoutConstraint.activate([
+            mainStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            mainStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20), // Исправлено
+            mainStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            mainStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            buttonStack.heightAnchor.constraint(equalToConstant: 60),
+            
+            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 2/3),
+            
+            loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
 }
