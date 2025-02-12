@@ -33,11 +33,12 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         return $0
     }(UILabel())
     
-    private lazy var counterLabel: UILabel = {
+    private lazy var indexLabel: UILabel = {
         $0.text = "1/10"
         $0.font = UIFont(name: "YSDisplay-Medium", size: 20)
         $0.textColor = .ypWhite
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.accessibilityIdentifier = "Index"
         return $0
     }(UILabel())
     
@@ -47,6 +48,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 20
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.accessibilityIdentifier = "Poster"
         return $0
     }(UIImageView())
     
@@ -69,6 +71,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         $0.layer.cornerRadius = 15
         $0.addTarget(self, action: #selector(didTapYesButton), for: .touchUpInside)
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.accessibilityIdentifier = "Yes"
         return $0
     }(UIButton())
     
@@ -81,6 +84,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         $0.layer.cornerRadius = 15
         $0.addTarget(self, action: #selector(didTapNoButton), for: .touchUpInside)
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.accessibilityIdentifier = "No"
         return $0
     }(UIButton())
     
@@ -136,7 +140,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     func show(quiz step: QuizStepViewModel) {
         imageView.image = step.image
         textLabel.text = step.question
-        counterLabel.text = step.questionNumber
+        indexLabel.text = step.questionNumber
     }
     
     func show(alertModel: AlertModel) {
@@ -163,7 +167,7 @@ extension MovieQuizViewController {
     private func setupViewController() {
         view.backgroundColor = .ypBlack
         
-        let titleStack = UIStackView(arrangedSubviews: [questionLabel, counterLabel])
+        let titleStack = UIStackView(arrangedSubviews: [questionLabel, indexLabel])
         titleStack.axis = .horizontal
         titleStack.spacing = 20
 
