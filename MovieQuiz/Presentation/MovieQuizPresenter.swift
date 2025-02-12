@@ -9,7 +9,8 @@ import UIKit
 
 final class MovieQuizPresenter {
     
-    //MARK: - Private Properties
+    // MARK: - Private Properties
+    
     private weak var viewController: MovieQuizViewControllerProtocol?
     private let statisticService: StatisticServiceProtocol!
     private var questionFactory: QuestionFactoryProtocol?
@@ -19,7 +20,8 @@ final class MovieQuizPresenter {
     private var correctAnswers = 0
     private let questionsAmount = 10
     
-    //MARK: - Initializer
+    // MARK: - Initializer
+    
     init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
         statisticService = StatisticService()
@@ -29,7 +31,8 @@ final class MovieQuizPresenter {
         questionFactory?.loadData()
     }
     
-    //MARK: - Public Methods
+    // MARK: - Public Methods
+    
     func yesButtonClicked() {
         didAnswer(isYes: true)
     }
@@ -46,7 +49,8 @@ final class MovieQuizPresenter {
         )
     }
     
-    //MARK: - Private Methods
+    // MARK: - Private Methods
+    
     private func restartGame() {
         currentQuestionIndex = 0
         correctAnswers = 0
@@ -123,7 +127,7 @@ final class MovieQuizPresenter {
     }
 }
 
-//MARK: - QuestionFactoryDelegate
+// MARK: - QuestionFactoryDelegate
 extension MovieQuizPresenter: QuestionFactoryDelegate {
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else { return }

@@ -9,7 +9,8 @@ import UIKit
 
 final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
     
-    //MARK: - IB Outlets
+    // MARK: - IB Outlets
+    
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
@@ -18,11 +19,13 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     @IBOutlet private weak var questionLabel: UILabel!
     @IBOutlet private weak var loadingIndicator: UIActivityIndicatorView!
     
-    //MARK: - Private Properties
+    // MARK: - Private Properties
+    
     private var presenter: MovieQuizPresenter!
     private var alertPresenter: AlertPresenterProtocol?
     
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -30,7 +33,8 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         presenter = MovieQuizPresenter(viewController: self)
     }
     
-    //MARK: - IB Actions
+    // MARK: - IB Actions
+    
     @IBAction private func yesButtonClicked(_ sender: Any) {
         blockButtons()
         presenter.yesButtonClicked()
@@ -41,7 +45,8 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         presenter.noButtonClicked()
     }
     
-    //MARK: - Public Methods
+    // MARK: - Public Methods
+    
     func showLoadingIndicator() {
         loadingIndicator.startAnimating()
     }
@@ -81,8 +86,11 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         alertPresenter = AlertPresenter(viewController: self)
         alertPresenter?.show(alertModel: alertModel)
     }
-    
-    //MARK: - Private Methods
+}
+
+// MARK: - Setup
+
+extension MovieQuizViewController {
     private func setFonts() {
         textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
