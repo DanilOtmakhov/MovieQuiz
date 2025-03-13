@@ -53,7 +53,6 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     }(UIImageView())
     
     private lazy var textLabel: UILabel = {
-        $0.text = "Рейтинг этого фильма меньше чем 5?"
         $0.font = UIFont(name: "YSDisplay-Bold", size: 23)
         $0.textColor = .ypWhite
         $0.numberOfLines = 2
