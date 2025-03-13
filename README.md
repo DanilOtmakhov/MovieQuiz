@@ -5,6 +5,15 @@ MovieQuiz is an iOS application with quizzes about movies from the IMDb Top 250 
 ## 📝 App Description  
 MovieQuiz is a single-page application where users test their knowledge of movie ratings. At the end of each game round, statistics are displayed, showing the number of correct answers and the user's best results. The goal of the game is to answer all 10 questions correctly.  
 
+## 📸 Screenshots 
+
+<p align="center">
+  <img src="Screenshots/1.png" width="200">
+  <img src="Screenshots/2.png" width="200">
+  <img src="Screenshots/3.png" width="200">
+  <img src="Screenshots/4.png" width="200">
+</p>
+
 ## 🎯 Main Features  
 - Splash screen on app launch  
 - Question screen with a movie image and two answer options: "Yes" and "No"  
